@@ -20,7 +20,8 @@ from django.urls import include, path
 from web_project.views import SystemView
 
 from django.conf import settings
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns, static
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
 urlpatterns = [
@@ -61,6 +62,17 @@ urlpatterns = [
 
     #Blog urls
     path('', include('apps.blogs.urls')),
+
+
+    #sifat
+    # User urls
+    path("", include("apps.users.urls")),
+
+    # Settings urls
+    path("", include("apps.settings.urls")),
+
+    # Services urls
+    path("", include("apps.services.urls")),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

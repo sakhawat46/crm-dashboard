@@ -68,10 +68,22 @@ INSTALLED_APPS = [
     "apps.form_layouts",
     "apps.tables",
     "apps.blogs",
+    "apps.users",
+    "apps.settings",
+    "apps.services",
+
+
     "ckeditor",
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -113,7 +125,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
-
+AUTH_USER_MODEL = 'authentication.CustomUser'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -195,3 +207,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+
+EMAIL_BackEND = 'django.care.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sifatali360@gmail.com'
+EMAIL_HOST_PASSWORD = 'huhe rrbm klcz nfdv'
+

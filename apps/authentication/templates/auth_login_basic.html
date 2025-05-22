@@ -28,23 +28,36 @@
           <h4 class="mb-1">Welcome to {% get_theme_variables 'template_name' %}! 👋</h4>
           <p class="mb-6">Please sign-in to your account and start the adventure</p>
 
-          <form id="formAuthentication" class="mb-6" action="{% url 'index' %}">
+          {% if request.GET.message %}
+            <div class="alert alert-success"  role="alert">
+              {{ request.GET.message }}
+            </div>
+          {% endif %}
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+              {{ error }}
+            </div>
+            {% endif %}
+
+          <form id="formAuthentication" class="mb-6" method="POST">
             {% csrf_token %}
             <div class="mb-6">
               <label for="email" class="form-label">Email or Username</label>
-              <input type="text" class="form-control" id="email" name="email-username" placeholder="Enter your email or username" autofocus>
+              <input value="{{ email }}" type="text" class="form-control" id="email" name="email" placeholder="Enter your email or username" autofocus>
             </div>
             <div class="mb-6 form-password-toggle">
               <label class="form-label" for="password">Password</label>
               <div class="input-group input-group-merge">
-                <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                <input  type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                {% if not password %}
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                {% endif %}
               </div>
             </div>
             <div class="mb-8">
               <div class="d-flex justify-content-between mt-8">
                 <div class="form-check mb-0 ms-2">
-                  <input class="form-check-input" type="checkbox" id="remember-me">
+                  <input class="form-check-input" type="checkbox" id="remember-me" name="remember_me">
                   <label class="form-check-label" for="remember-me">
                     Remember Me
                   </label>
