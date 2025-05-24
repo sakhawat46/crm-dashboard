@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'rest_framework',
+    'widget_tweaks',
 ]
 
 REST_FRAMEWORK = {
@@ -216,4 +217,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'sifatali360@gmail.com'
 EMAIL_HOST_PASSWORD = 'huhe rrbm klcz nfdv'
-
