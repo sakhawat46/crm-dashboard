@@ -62,7 +62,7 @@
           </a>
         </li>
         <li class="menu-item {% if '/fluid/' in request.path %}active{% endif %}">
-          <a href="#" class="menu-link">
+          <a href="{% url 'custom_admin_about_us'%}" class="menu-link">
             <div class="text-truncate" data-i18n="Fluid">About Page</div>
           </a>
         </li>
@@ -72,7 +72,7 @@
           </a>
         </li>
         <li class="menu-item {% if '/blank/' in request.path %}active{% endif %}">
-          <a href="#" class="menu-link">
+          <a href="{% url 'contact_us'%}" class="menu-link">
             <div class="text-truncate" data-i18n="Blank">Contact Page</div>
           </a>
         </li>

@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.settings",
     "apps.services",
+    "apps.page2",
 
 
     "ckeditor",

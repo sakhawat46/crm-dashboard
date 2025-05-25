@@ -1,0 +1,18 @@
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Services</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for form in forms %}
+            <div class="card mb-3 p-3">
+                {{ form.management_form }}
+                {{ form.title.label_tag }} {{ form.title }}
+                {{ form.description.label_tag }} {{ form.description }}
+                {{ form.icon.label_tag }} {{ form.icon }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Save All</button>
+    </form>
+</div>
+{% endblock %}
