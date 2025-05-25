@@ -1,12 +1,12 @@
 from django.views.generic import TemplateView, ListView
 from web_project import TemplateLayout
 from django.contrib.auth import get_user_model
-from apps.authentication.models import Avater
 from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect, render
-from django.views.generic import View
-from django.urls import reverse
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
+from django.views.generic import CreateView,UpdateView
+from .forms import UserCreateForm, UserUpdateForm
 
 User = get_user_model()
 
@@ -27,7 +27,7 @@ class UserListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Initialize your TemplateLayout if needed
+        # Initialize TemplateLayout if needed
         context = TemplateLayout.init(self, context)
 
         # Add additional pagination context
@@ -36,31 +36,19 @@ class UserListView(ListView):
         return context
 
 
-class UserCreateView(UserView):
-    template_name = 'user_create_basic.html'
+class UserCreateView(CreateView):
+    template_name = 'edit_user.html'
+    form_class = UserCreateForm
+    success_url = reverse_lazy('user_create_success')
 
-    def post(self, request, *args, **kwargs):
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        password = request.POST.get('password')
-        user_type = request.POST.get('user_type')
-        avatar = request.FILES.get('avatar')
-        try:
-            user = User.objects.create_user(email=email, password=password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.username =username
-            user.user_type = user_type
-            user.save()
-            if avatar and user:
-                Avater.objects.create(user=user, avatar=avatar)
-            return redirect(reverse('user_create_success', kwargs={'pk': user.pk}))
-        except Exception as error:
-            context = self.get_context_data()
-            context["error"] = error
-            return self.render_to_response(context)
+    def get_success_url(self):
+        # After the user is created, we can access it via self.object
+        return reverse_lazy('user_create_success', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        # A function to init the global layout. It is defined in web_project/__init__.py file
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        return context
 
 class UserCreateSuccessView(UserView):
     template_name = 'user_create_success.html'
@@ -73,56 +61,18 @@ class UserCreateSuccessView(UserView):
 
 
 
-class UserUpdateView(UserView):
-    template_name = 'user_update_basic.html'
+class UserUpdateView(UpdateView):
+    template_name = 'edit_user.html'
+    form_class = UserUpdateForm
+    model = User
 
-    def get_object(self):
-        return get_object_or_404(User, pk=self.kwargs.get('pk'))
+    def get_success_url(self):
+        return reverse_lazy('user_create_success', kwargs={'pk': self.object.pk})
 
-    def get(self, request, *args, **kwargs):
-        user = self.get_object()
-        context = self.get_context_data()
-        context['user'] = user
-        try:
-            context['avatar'] = user.avater
-        except:
-            context['avatar'] = None
-        return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        user = self.get_object()
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        password = request.POST.get('password')
-        user_type = request.POST.get('user_type')
-        avatar = request.FILES.get('avatar')
-
-        try:
-            user.email = email
-            user.username = username
-            user.first_name = first_name
-            user.last_name = last_name
-            user.user_type = user_type
-
-            if password:  # Only update password if a new one was provided
-                user.set_password(password)
-
-            user.save()
-
-            if avatar:
-                # Delete old avatar if exists
-                Avater.objects.filter(user=user).delete()
-                # Create new avatar
-                Avater.objects.create(user=user, avatar=avatar)
-
-            return redirect(reverse('user-list'))
-        except Exception as error:
-            context = self.get_context_data()
-            context["error"] = error
-            context['user'] = user
-            return self.render_to_response(context)
+    def get_context_data(self, **kwargs):
+        # A function to init the global layout. It is defined in web_project/__init__.py file
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        return context
 
 
 

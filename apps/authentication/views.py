@@ -1,5 +1,8 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth import logout
 from web_project import TemplateLayout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from web_project.template_helpers.theme import TemplateHelper
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
@@ -11,7 +14,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from urllib.parse import urlencode
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -21,7 +24,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from django.contrib import messages
 User = get_user_model()
+
+
+
+
+
 
 
 class AuthView(TemplateView):
@@ -62,7 +71,6 @@ class LoginView(AuthView):
                 temp_user = User.objects.filter(username=email).first()
                 if temp_user:
                     user = authenticate(request=request, email=temp_user.email, password=password)
-                    email = temp_user.email  # Update email if found
             except User.DoesNotExist:
                 pass
 
@@ -81,6 +89,19 @@ class LoginView(AuthView):
 
         login(request, user)
         return redirect('/')
+
+class LogOutView(View, LoginRequiredMixin):
+    login_url = reverse_lazy('auth-login-basic')
+
+    def get(self, request):
+        logout(request)
+        messages.success(request, "You have been logged out successfully.")
+        return redirect(reverse('auth-login-basic'))
+
+    def post(self, request):
+        return self.get(request)
+
+
 
 
 
