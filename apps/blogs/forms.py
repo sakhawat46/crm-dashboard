@@ -13,6 +13,10 @@ class CategoryForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Enter category name'}),
         }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['slug'].widget.attrs.update({'disabled': 'disabled'})
 
     def clean_slug(self):
         slug = self.cleaned_data.get('slug')
@@ -28,6 +32,10 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
         fields = ['thumbnail', 'blog_title', 'slug', 'category', 'author', 'description']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['slug'].widget.attrs.update({'disabled': 'disabled'})
 
     def clean_slug(self):
         slug = self.cleaned_data.get('slug')
