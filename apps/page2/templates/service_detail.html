@@ -1,0 +1,34 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Dashboard - Analytics{% endblock %}
+
+{% block vendor_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'vendor/libs/apex-charts/apex-charts.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+{{ block.super }}
+<script src="{% static 'vendor/libs/apex-charts/apexcharts.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+{{ block.super }}
+<script src="{% static 'js/dashboards-analytics.js' %}"></script>
+{% endblock page_js %}
+
+{% block content %}
+  <div class="service-detail">
+    <h1>{{ service.name }}</h1>
+
+    <p><strong>Description:</strong> {{ service.description }}</p>
+    <p><strong>Price:</strong> ${{ service.price }}</p>
+    <p><strong>Created at:</strong> {{ service.created_at }}</p>
+    <p><strong>Updated at:</strong> {{ service.updated_at }}</p>
+
+    <a href="{% url 'service_edit' service.pk %}">Edit Service</a>
+  </div>
+{% endblock %}

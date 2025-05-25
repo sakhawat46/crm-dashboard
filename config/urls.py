@@ -73,6 +73,10 @@ urlpatterns = [
 
     # Services urls
     path("", include("apps.services.urls")),
+
+
+    #pagessssssss by riyad
+    path("", include("apps.page2.urls")),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
